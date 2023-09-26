@@ -1,0 +1,185 @@
+echo "# FlightSchedule" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/whitneysho-codes/FlightSchedule.git
+git push -u origin main
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class FlightDriver {
+    // Global variables
+    ArrayList<Flight> flightRecords;
+    final int FLIGHT_INFORMATION = 5; // Number of elements
+    ArrayList<Passenger> passengers;
+    static int SEAT_NUMBER = 10; // Number of elements
+    Scanner scan = new Scanner(System.in);
+
+    public FlightDriver() {
+        System.out.print("\f");
+
+        // Create the Flights ArrayList
+        flightRecords = new ArrayList<Flight>();
+
+        // Create the Passengers ArrayList
+        passengers = new ArrayList<Passenger>();
+
+        // Create  flights 
+        createFlights();
+
+        // Input menu options
+        inputMenu();
+public class FlightDriver {
+
+    public void createFlights() {
+        // Sample flights
+        flightRecords.add(new Flight("EI472", "Wednesday", "Rio", 3));
+        flightRecords.add(new Flight("EI579", "Friday", "Bali", 6));
+        flightRecords.add(new Flight("EI386", "Monday", "Melbourne", 7));
+        flightRecords.add(new Flight("EI937", "Thursday", "New York", 5));
+        flightRecords.add(new Flight("EI483", "Sunday", "Seoul", 9));
+    }
+
+    public void bookAFlight() {
+        String requiredDestination, dayOfFlight, passengerName;
+        Scanner scan = new Scanner(System.in);
+
+        System.out.print("Enter required destination: ");
+        requiredDestination = scan.nextLine();
+
+        System.out.print("Enter day of flight: ");
+        dayOfFlight = scan.nextLine();
+
+        System.out.print("Enter passenger's name: ");
+        passengerName = scan.nextLine();
+
+        // Find a flight matching the destination and day
+        Flight selectedFlight = null;
+        for (Flight flight : flightRecords) {
+            if (flight.getDestination().equalsIgnoreCase(requiredDestination) &&
+                flight.getDayOfFlight().equalsIgnoreCase(dayOfFlight)) {
+                selectedFlight = flight;
+                break;
+            }
+        }
+
+        if (selectedFlight != null && selectedFlight.bookSeat(passengerName)) {
+            passengers.add(new Passenger(passengerName, selectedFlight.getFlightNumber()));
+            System.out.println("Flight booked successfully.");
+        } else {
+            System.out.println("No matching flight found or all seats are booked.");
+        }
+    }
+
+    public void cancelABooking() {
+        String passengerName, flightNumber;
+        Scanner scan = new Scanner(System.in);
+
+        System.out.print("Enter passenger's name: ");
+        passengerName = scan.nextLine();
+
+        System.out.print("Enter flight number: ");
+        flightNumber = scan.nextLine();
+
+        // Find the passenger's booking and cancel it
+        Passenger canceledPassenger = null;
+        for (Passenger passenger : passengers) {
+            if (passenger.getName().equalsIgnoreCase(passengerName) &&
+                passenger.getFlightNumber().equalsIgnoreCase(flightNumber)) {
+                canceledPassenger = passenger;
+                break;
+            }
+        }
+
+        if (canceledPassenger != null) {
+            Flight canceledFlight = null;
+            for (Flight flight : flightRecords) {
+                if (flight.getFlightNumber().equalsIgnoreCase(flightNumber)) {
+                    canceledFlight = flight;
+                    break;
+                }
+            }
+
+            if (canceledFlight != null) {
+                canceledFlight.cancelSeat(passengerName);
+                passengers.remove(canceledPassenger);
+                System.out.println("Booking canceled successfully.");
+            }
+        } else {
+            System.out.println("No matching booking found.");
+        }
+    }
+
+    public void displayFlightSchedule() {
+        System.out.println("\nFlight Schedule:");
+        for (Flight flight : flightRecords) {
+            System.out.println(flight);
+        }
+    }
+
+    public void displayPassengerBookings() {
+        System.out.println("\nPassenger Bookings:");
+        for (Passenger passenger : passengers) {
+            System.out.println(passenger);
+        }
+    }
+
+    public void orderAMeal() {
+        String meal;
+        Scanner scan = new Scanner(System.in);
+
+        System.out.print("What meal would you like? ");
+        meal = scan.nextLine();
+
+        // Implement meal ordering logic here if needed
+
+        System.out.println("Meal ordered successfully.");
+    }
+
+    public void inputMenu() {
+        int menu;
+        Scanner scan = new Scanner(System.in);
+
+        do {
+            System.out.println("\nSelect an option from the menu: ");
+            System.out.println("1. Book a flight");
+            System.out.println("2. Cancel a booking");
+            System.out.println("3. Display flight schedule");
+            System.out.println("4. Display Passenger Bookings");
+            System.out.println("5. Order a Meal");
+            System.out.println("6. Exit");
+
+            menu = scan.nextInt();
+
+            switch (menu) {
+                case 1:
+                    bookAFlight();
+                    break;
+                case 2:
+                    cancelABooking();
+                    break;
+                case 3:
+                    displayFlightSchedule();
+                    break;
+                case 4:
+                    displayPassengerBookings();
+                    break;
+                case 5:
+                    orderAMeal();
+                    break;
+                case 6:
+                    System.out.println("Have a good day!");
+                    break;
+                default:
+                    System.out.println("Error - invalid option chosen. Try again.");
+                    break;
+            }
+        } while (menu != 6);
+    }
+
+    public static void main(String[] args) {
+        new FlightDriver();
+    }
+}
